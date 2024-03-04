@@ -1,0 +1,87 @@
+#Table for Documents
+-- Table: public.Documents
+
+-- DROP TABLE IF EXISTS public."Documents";
+
+CREATE TABLE IF NOT EXISTS public."Documents"
+(
+    doc integer NOT NULL,
+    text text COLLATE pg_catalog."default" NOT NULL,
+    title text COLLATE pg_catalog."default" NOT NULL,
+    num_chars integer NOT NULL,
+    date date NOT NULL,
+    cat_id integer NOT NULL,
+    CONSTRAINT "Documents_pkey" PRIMARY KEY (doc),
+    CONSTRAINT cat__id_fk FOREIGN KEY (cat_id)
+        REFERENCES public."Categories" (id_cat) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Documents"
+    OWNER to postgres;
+
+#TABLE for Categories
+-- Table: public.Categories
+
+-- DROP TABLE IF EXISTS public."Categories";
+
+CREATE TABLE IF NOT EXISTS public."Categories"
+(
+    id_cat integer NOT NULL,
+    name text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "Categories_pkey" PRIMARY KEY (id_cat)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Categories"
+    OWNER to postgres;
+
+#Table for Terms
+-- Table: public.Terms
+
+-- DROP TABLE IF EXISTS public."Terms";
+
+CREATE TABLE IF NOT EXISTS public."Terms"
+(
+    term text COLLATE pg_catalog."default" NOT NULL,
+    num_chars integer NOT NULL,
+    CONSTRAINT "Terms_pkey" PRIMARY KEY (term)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Terms"
+    OWNER to postgres;
+
+#Table for Doc_Terms
+-- Table: public.Doc_Terms
+
+-- DROP TABLE IF EXISTS public."Doc_Terms";
+
+CREATE TABLE IF NOT EXISTS public."Doc_Terms"
+(
+    doc_number integer NOT NULL,
+    term_t text COLLATE pg_catalog."default" NOT NULL,
+    term_count integer,
+    CONSTRAINT "Doc_Terms_pkey" PRIMARY KEY (doc_number, term_t),
+    CONSTRAINT doc_number FOREIGN KEY (doc_number)
+        REFERENCES public."Documents" (doc) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT term_t FOREIGN KEY (term_t)
+        REFERENCES public."Terms" (term) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."Doc_Terms"
+    OWNER to postgres;
